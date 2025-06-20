@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dog-of-the-Day (But Hard to Find!)</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    body {
+      background:#00ff00;
+      color:#ff0000;
+      font-family:"Comic Sans MS", cursive;
+      line-height:1.1;
+      margin:0; padding:0 10px;
+      animation: flash 0.5s infinite alternate;
+    }
+    @keyframes flash { from{filter:brightness(1);} to{filter:brightness(1.3);} }
+
+    #app { text-align:center; }
+
+    button {
+      font-size:10px;
+      padding:2px 4px;
+      margin:2px;
+      background:#ffff00;
+      color:#ff0000;
+      border:1px dashed #0000ff;
+      cursor:pointer;
+    }
+
+    img { max-width:400px; margin-top:20px; }
+
+    .hidden { display:none; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>Today's cute dog!!!</h1>
+
+    <p>
+      <span v-for="n in 60" :key="n">Hello dog{{n}}!&nbsp;</span>
+    </p>
+
+    <div>
+      <button v-for="n in 5" :key="n" @click="clicks++">Button&nbsp;{{n}}</button>
+    </div>
+
+    <img :src="dogUrl" class="hidden">
+  </div>
+
+<script>
+const { createApp, ref, watch } = Vue;
+
+createApp({
+  setup() {
+    const dogUrl = ref('');
+    const clicks  = ref(0);
+    const barkEl  = ref(null);
+
+    watch(clicks, async (val) => {
+      if (val === 5) {
+        const res = await fetch('https://dog.ceo/api/breeds/image/random');
+        const json = await res.json();
+        dogUrl.value = json.message;
+        document.querySelector('img').classList.remove('hidden');
+      }
+    });
+
+    return { dogUrl, clicks};
+  }
+}).mount('#app');
+</script>
+</body>
+</html>
