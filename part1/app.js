@@ -59,19 +59,22 @@ app.get('/api/walkers/summary', async (req, res) => {
   try {
     const [rows] = await db.execute(`
       SELECT
-        u.username AS walker_username,
+        w.username AS walker_username,
         COUNT(r.rating_id) AS total_ratings,
         ROUND(AVG(r.rating), 2) AS average_rating,
         COUNT(DISTINCT wr.request_id) AS completed_walks
-      FROM Users u
-      LEFT JOIN WalkRatings r ON u.user_id = r.walker_id
+      FROM Users w
+      LEFT JOIN WalkRatings r ON w.user_id = r.walker_id
       LEFT JOIN WalkRequests wr ON r.request_id = wr.request_id AND wr.status = 'completed'
-      WHERE u.role = 'walker'
-      GROUP BY u.user_id
+      WHERE w.role = 'walker'
+      GROUP BY w.user_id
     `);
     res.json(rows);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch walker summary' });
+    res.status(500).json({
+      error: 'Failed to fetch walker summary',
+      details: err.message
+    });
   }
 });
 
