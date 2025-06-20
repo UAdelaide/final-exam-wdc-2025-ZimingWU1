@@ -21,9 +21,9 @@ let db;
       password: '',
       database: 'DogWalkService'
     });
-    console.log('✅ Connected to DogWalkService');
+    console.log('Connected to DogWalkService');
   } catch (err) {
-    console.error('❌ Database connection error:', err);
+    console.error('Database connection error:', err);
   }
 })();
 
@@ -78,7 +78,7 @@ app.get('/api/walkers/summary', async (req, res) => {
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
+  console.log(`Server running at http://localhost:${PORT}`);
 });
 
 module.exports = app;
