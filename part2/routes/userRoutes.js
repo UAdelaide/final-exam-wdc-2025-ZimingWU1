@@ -76,6 +76,15 @@ router.get('/logout', (req, res) => {
   });
 });
 
+router.get('/dogs', async (req, res) => {
+  try {
+    const [rows] = await db.query('SELECT * FROM Dogs');
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch dogs' });
+  }
+});
+
 router.get('/:id/dogs', async (req, res) => {
   const userId = req.params.id;
   try {
@@ -89,4 +98,3 @@ router.get('/:id/dogs', async (req, res) => {
 });
 
 module.exports = router;
-
