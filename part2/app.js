@@ -9,6 +9,7 @@ const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '/public')));
 
+// Set session
 app.use(session({
   secret: 'secretkey',
   resave: false,
