@@ -52,7 +52,7 @@ router.post('/login', async (req, res) => {
     // Save user session
     req.session.user = rows[0];
 
-    // Role based redirect
+    // Role-based redirect
     if (rows[0].role === 'owner') {
       return res.redirect('/owner-dashboard.html');
     } else if (rows[0].role === 'walker') {
@@ -66,4 +66,15 @@ router.post('/login', async (req, res) => {
   }
 });
 
+router.get('/logout', (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      return res.status(500).json({ error: 'Logout failed' });
+    }
+    res.clearCookie('connect.sid');
+    res.redirect('/index.html');
+  });
+});
+
 module.exports = router;
+
