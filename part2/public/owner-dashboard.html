@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -7,9 +8,14 @@
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
 <body class="bg-light">
+  <!-- 顶部右上角 Logout 按钮 -->
+  <div style="position: absolute; top: 1rem; right: 1rem;">
+    <button @click="logout" class="btn btn-outline-danger">Logout</button>
+  </div>
+
   <div id="app" class="container py-4">
     <h1 class="mb-4 text-primary">Owner Dashboard</h1>
-    <button @click="logout" class="btn btn-outline-danger mb-3">Logout</button>
+
     <!-- Walk request form -->
     <div class="card mb-4">
       <div class="card-header bg-primary text-white">
@@ -83,6 +89,7 @@
         const walks = ref([]);
         const message = ref('');
         const error = ref('');
+        const dogs = ref([]);
 
         async function loadWalks() {
           try {
@@ -90,6 +97,17 @@
             walks.value = await res.json();
           } catch (err) {
             error.value = 'Failed to load walk requests';
+          }
+        }
+
+        async function loadDogs() {
+          try {
+            const res = await fetch('/api/users/me');
+            const user = await res.json();
+            const dogRes = await fetch(`/api/users/${user.user_id}/dogs`);
+            dogs.value = await dogRes.json();
+          } catch (err) {
+            console.error('Failed to load dogs:', err);
           }
         }
 
@@ -126,6 +144,7 @@
 
         onMounted(() => {
           loadWalks();
+          loadDogs();
         });
 
         return {
@@ -134,7 +153,8 @@
           message,
           error,
           submitWalkRequest,
-          logout
+          logout,
+          dogs
         };
       }
     }).mount('#app');
@@ -143,3 +163,4 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
